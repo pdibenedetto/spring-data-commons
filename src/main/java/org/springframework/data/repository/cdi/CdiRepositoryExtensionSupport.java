@@ -99,8 +99,8 @@ public abstract class CdiRepositoryExtensionSupport implements Extension {
 
 		boolean isInterface = type.isInterface();
 		boolean extendsRepository = Repository.class.isAssignableFrom(type);
-		boolean isAnnotated = AnnotationUtils.findAnnotation(type, RepositoryDefinition.class) != null;
-		boolean excludedByAnnotation = AnnotationUtils.findAnnotation(type, NoRepositoryBean.class) != null;
+		boolean isAnnotated = isAnnotatedWith(type, RepositoryDefinition.class);
+		boolean excludedByAnnotation = isAnnotatedWith(type, NoRepositoryBean.class);
 
 		return isInterface && (extendsRepository || isAnnotated) && !excludedByAnnotation;
 	}
@@ -183,6 +183,10 @@ public abstract class CdiRepositoryExtensionSupport implements Extension {
 	 */
 	protected CdiRepositoryContext getRepositoryContext() {
 		return context;
+	}
+
+	private static boolean isAnnotatedWith(Class<?> type, Class<? extends Annotation> annotationType) {
+		return AnnotationUtils.findAnnotation(type, annotationType) != null;
 	}
 
 	@SuppressWarnings("all")
